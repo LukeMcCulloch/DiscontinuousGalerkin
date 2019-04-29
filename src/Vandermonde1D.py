@@ -9,9 +9,9 @@ import numpy as np
 
 from JacobiP import JacobiP_scipy,JacobiP_matlab, JacobiP_cpp
 
-#JacobiP_ = JacobiP_matlab
+JacobiP_ = JacobiP_matlab
 
-JacobiP_ = JacobiP_cpp
+#JacobiP_ = JacobiP_cpp
 
 def Vandermonde1D(N,r):
     """

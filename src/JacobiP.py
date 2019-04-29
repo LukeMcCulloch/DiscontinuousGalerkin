@@ -92,7 +92,7 @@ def JacobiP_matlab(x,alpha,beta,N):
         anew = 2.0/(h1+2.)*sqrt( (i+1.)*(i+1.+alpha+beta)*(i+1.+alpha) * \
                                                    (i+1.+beta)/(h1+1.)/(h1+3.))
         bnew = - (alpha**2 - beta**2)/ h1/(h1+2.) 
-        PL[i+1,:] = 1./anew*( -aold*PL[i-1,:] + (xp-bnew)*PL[i,:] )
+        PL[i+1,:] = 1./anew*( -aold*PL[i-1,:] + np.multiply( (xp-bnew),PL[i,:] ) )
         aold =anew
         
         
