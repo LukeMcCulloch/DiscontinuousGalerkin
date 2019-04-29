@@ -9,15 +9,19 @@ import numpy as np
 
 from JacobiP import JacobiP_scipy,JacobiP_matlab, JacobiP_cpp
 
-JacobiP_ = JacobiP_matlab
+#JacobiP_ = JacobiP_matlab
 
-#JacobiP_ = JacobiP_cpp
+JacobiP_ = JacobiP_cpp
 
 def Vandermonde1D(N,r):
     """
     - function [v1d] = vandermonde1d(n,r)
     - purpose : initialize the 
         1d vandermonde matrix, v_{ij} = phi_j(r_i);
+        
+        j=2
+        v1d = np.zeros((len(r),N+1),float)
+        
     #"""
     v1d = np.zeros((len(r),N+1),float)
     for j in range(N+1):

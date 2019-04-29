@@ -92,7 +92,6 @@ def JacobiP_matlab(x,alpha,beta,N):
         anew = 2.0/(h1+2.)*sqrt( (i+1.)*(i+1.+alpha+beta)*(i+1.+alpha) * \
                                                    (i+1.+beta)/(h1+1.)/(h1+3.))
         bnew = - (alpha**2 - beta**2)/ h1/(h1+2.) 
-        #PL[i+2,:] = 1./anew*( -aold*PL[i,:] + (xp-bnew)*PL[i+1,:] )
         PL[i+1,:] = 1./anew*( -aold*PL[i-1,:] + (xp-bnew)*PL[i,:] )
         aold =anew
         
@@ -114,12 +113,14 @@ def JacobiP_cpp(x,alpha,beta,N):
     
     test:
         #
-        j=1
+        j=2
         r = np.asarray([1, 2, 3, 5])
         x=r[:]
-        alpha=0
-        beta=0
+        
+        alpha=0.
+        beta=0.
         N=j
+        
         #
     #"""
     #safety first, a hem:
@@ -147,20 +148,33 @@ def JacobiP_cpp(x,alpha,beta,N):
     PL = np.zeros((N+1, Nc),float)
     
     # Initial values P_0(x) and P_1(x)
-    gamma0 = ab1**2./(ab1)*gamma(a1)*gamma(b1)/gamma(ab1)
+    gamma0 = (2.**ab1)/(ab1)*gamma(a1)*gamma(b1)/gamma(ab1)
+    
     
     if N==0:
-        return 1./sqrt(gamma0)
+        P[:] = 1./sqrt(gamma0)
+        return P.transpose()
     else:
         PL[1,:] = 1./sqrt(gamma0)
         
     gamma1 = (a1)*(b1)/(ab+3.0)*gamma0
     prow = ((ab+2.0)*x/2.0 + (alpha-beta)/2.0) / sqrt(gamma1)
     
+    
+    """
+    
+    gamma1 = (alpha+1.)*(beta+1.)/(alpha+beta+3.)*gamma0
+    
+    PL[1,:] = ( np.asarray((alpha+beta+2)*xp)/2. + (alpha-beta)/2)/sqrt(gamma1)
+    if (N==1): 
+        P=PL.conj().transpose()
+        return P
+    """
     if N==1:
-        return prow
+        P[:] = prow
+        return P.transpose()
     else:
-        PL[2] = prow
+        PL[1,:] = prow
     
     ## Repeat value in recurrence.
     aold = 2.0/(2.0+ab)*sqrt((a1)*(b1)/(ab+3.0))
@@ -171,7 +185,9 @@ def JacobiP_cpp(x,alpha,beta,N):
         anew = 2.0/(h1+2.0)*sqrt((i+1)*(i+ab1)*(i+a1)*(i+b1)/(h1+1.0)/(h1+3.0))
         bnew = - (SQ(alpha)-SQ(beta))/h1/(h1+2.0)
         x_bnew = x-bnew
-        PL[i+2,:] = 1.0/anew*( -aold*PL[i] + x_bnew * PL[i+1] )
+        #PL[i+2,:] = 1.0/anew*( -aold*PL[i] + x_bnew * PL[i+1] )
+        PL[i+1,:] = 1.0/anew*( -aold*PL[i-1,:] + (x_bnew)*PL[i,:] )
         aold =anew 
     
+    P = PL.transpose()
     return P
